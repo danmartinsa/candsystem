@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block content %} 
+
+
+<table class="table table-bordered mb-0" id="tb_quizlist">
+    <thead>
+        <tr>
+            <th>Quiz</th>
+            <th class="d-none d-sm-table-cell">Subject</th>
+            <th class="d-none d-sm-table-cell">Questions</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quiz in quizzes %}
+        <td class="align-middle">{{ quiz.title }}</td>
+        <td class="text-right" data-orderable="false">
+            <a href="{% url 'quiz:title' quiz.tile %}" class="btn btn-primary">Start quiz</a>
+        </td>
+        </tr>
+        {% empty %} {% endfor %}
+    </tbody>
+</table>
+{% endblock %} {% block js %}
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#tb_quizlist').DataTable({
+            "order": [
+                [2, "desc"]
+            ]
+        });
+    });
+</script>
+{% endblock %}
