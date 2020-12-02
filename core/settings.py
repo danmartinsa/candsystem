@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+from django.conf import settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -56,12 +58,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
+# MEDIA_ROOT = BASE_DIR
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates'
+            BASE_DIR / 'templates',
+            
         ],
         'APP_DIRS': True,
         'OPTIONS': {
