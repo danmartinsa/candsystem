@@ -9,7 +9,7 @@ from itertools import chain
 from datetime import datetime
 
 
-def create_quiz(user_email, plang, position):
+def bind_quiz(user_email, plang, position):
     '''
     Function to associate a user with a quiz
     
@@ -18,24 +18,25 @@ def create_quiz(user_email, plang, position):
     try:
         userid = user[0].id
     except:
-        return None
+        return "user not found"
     else:
         new_quiz = create_quiz(plang , position)
         if new_quiz is None:
             raise TypeError
-        else:
-            set_quiz = Candidate.objects.create(userid=user, quiz_list_id=new_quiz)
-            set_quiz.save()
+        set_quiz = Candidate.objects.create(userid=user, quiz_list_id=new_quiz)
+        set_quiz.save()
 
-            return set_quiz
-
+        return set_quiz
 
 
-def select_questions(plang, position):
+
+def create_quiz(plang, position):
     '''
     Function to create quiz selecting appropriate questions
 
     '''
+    
+    
     category = Category.objects.filter(category=plang)  # selection for language
     if category.count() > 0:
         language_subset = SubCategory.objects.filter(category_id = category[0].id)
@@ -43,7 +44,6 @@ def select_questions(plang, position):
         new_quiz.title = str(datetime.now()) + plang + position
         new_quiz.url = str(datetime.now()) + plang + position
         new_quiz.save()
-
         MC_list = MCQuestion.objects.filter(sub_category__in=language_subset.values('id')) 
         TF_list = TF_Question.objects.filter(sub_category__in=language_subset.values('id'))
 
