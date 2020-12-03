@@ -5,9 +5,21 @@
 
 from django.urls import include, path
 from .views import QuizList
-from .views import home
+# from .views import home
+from django.shortcuts import render
+from django.views import generic, static
+from material.frontend import urls as frontend_urls
+from . import forms
 
-urlpatterns = [
-    path('', home, name='home'),
+def index_view(request):
+    context = {
+        'login': forms.LoginForm(),
+
+    }
+    return render(request, 'index.html', context)
+
+
+urlpatterns = [  
+    path('',  index_view),
     path('list/', QuizList.as_view(), name='quiz_list'),
 ]

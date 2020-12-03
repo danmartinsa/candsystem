@@ -27,23 +27,31 @@ SECRET_KEY = 'cd)r($chxlj!$=kf&cf4ezga70_v&1!a$e(er8wrm8nvl!_uj='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'website',
+    #Quiz apps
     'quiz',
     'essay',
     'multichoice',
     'true_false',
+    #Website app
+    'website',
+
+    #Material Design layout
+    'material.admin',
+    'material.admin.default',
+    'material',
+    'material.frontend',
     
 ]
 
