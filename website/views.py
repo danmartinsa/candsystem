@@ -35,3 +35,5 @@ def home(request):
         else:
             return redirect('admin:index')
     return render(request, 'website/home.html')
+
+

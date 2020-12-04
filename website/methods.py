@@ -20,7 +20,7 @@ def create_quiz(user_email, plang, position):
     except:
         return None
     else:
-        new_quiz = create_quiz(plang , position)
+        new_quiz = select_questions(plang , position)
         if new_quiz is None:
             raise TypeError
         else:
@@ -38,18 +38,22 @@ def select_questions(plang, position):
     '''
     category = Category.objects.filter(category=plang)  # selection for language
     if category.count() > 0:
-        language_subset = SubCategory.objects.filter(category_id = category[0].id)
+        
         new_quiz = Quiz.objects.create()
         new_quiz.title = str(datetime.now()) + plang + position
         new_quiz.url = str(datetime.now()) + plang + position
         new_quiz.save()
 
+        language_subset = SubCategory.objects.filter(category_id = category[0].id)
+        
         MC_list = MCQuestion.objects.filter(sub_category__in=language_subset.values('id')) 
         TF_list = TF_Question.objects.filter(sub_category__in=language_subset.values('id'))
+        # Essay_list = Essay_Question.objects.filter(sub_category__in=language_subset.values('id'))
+               
+        questions_list = list(chain(MC_list.values('id'), TF_list.values('id')))
 
-        
-        for i in list(chain(MC_list.values('id'), TF_list.values('id'))):
-            question = Question.objects.get(id=i['id'])
+        for item in questions_list: 
+            question = Question.objects.get(id=item['id'])
             question.quiz.add(new_quiz)         
         return new_quiz.id
     else:
