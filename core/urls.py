@@ -22,8 +22,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('quiz/', include(quiz_urls)),
     path('', include(website_urls) ),
+    path('quiz/', include(quiz_urls)),
     path('accounts/', include('django.contrib.auth.urls'))
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

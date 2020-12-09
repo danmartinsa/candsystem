@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.admin.sites import site
 
-from .models import Candidate, User
+from .models import AssignTest, User, Role
 
 class UserAdmin(admin.ModelAdmin):
     list_display = (
@@ -9,7 +10,8 @@ class UserAdmin(admin.ModelAdmin):
         'is_active',)
 
 
-admin.site.register(Candidate)
+admin.site.register(AssignTest)
+admin.site.register(Role)
 admin.site.register(User, UserAdmin)
 
 # Register your models here.

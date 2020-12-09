@@ -9,25 +9,28 @@ class User(AbstractUser):
     is_interviwer = models.BooleanField(default=False)
     is_candidate = models.BooleanField(default=False)
 
-# class Position(models.Model):
-#     name =models.CharField(
-#         verbose_name=_("Position Name"),
-#         max_length=250, blank=True,
-#         unique=True, null=True)
+class Role(models.Model):
+    name = models.CharField(
+        verbose_name=_("Role Name"),
+        max_length=250, blank=True,
+        unique=True, null=True)
 
-#     class Meta:
-#         verbose_name = _("Position")
-#         verbose_name_plural = _("Positions")
+    class Meta:
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
         
 
-class Candidate(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    # position = models.ForeignKey(Position, on_delete=models.CASCADE, unique=False)
+class AssignTest(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="candidate")
+    requestor = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="requestor")
+    evaluator_1  = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="evaluator_1")
+    evaluator_2 = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, related_name="evaluator_2")
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, unique=False)
     quiz_list  = models.ForeignKey(Quiz, on_delete=models.CASCADE, unique=False)
 
     class Meta:
-        verbose_name = _("Candidate")
-        verbose_name_plural = _("Candidates")
+        verbose_name = _("Test")
+        verbose_name_plural = _("Tests")
         
 
 

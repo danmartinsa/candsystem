@@ -330,7 +330,7 @@ class QuizTake(FormView):
         max_score = len(q_order)
         percent = int(round((float(score) / max_score) * 100))
         session, session_possible = anon_session_score(self.request.session)
-        if score is 0:
+        if score == 0:
             score = "0"
 
         results = {
