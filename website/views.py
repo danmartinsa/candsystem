@@ -11,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 
-from django.views.generic import ListView, View
+from django.views.generic import ListView
+from django.views.generic.base import TemplateView
+from django.views import View
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView
@@ -42,8 +44,23 @@ from quiz.models import Quiz
 from website.methods import create_quiz
 from django.views.generic.edit import FormView 
 
-class HomeView(FormView):
+class HomePageView(TemplateView):
+    template_name = "website/home.html"
+
+    
+
+
+from django.urls import reverse
+class TestView(FormView):
     model = AssignTest
     form_class = selectAssignTestForm
     template_name ='website/test.html'
-    success_url ="/"
+
+    
+    
+    def form_valid(self, form):
+        form.save()
+        return super(TestView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('home')

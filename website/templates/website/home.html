@@ -1,29 +1,34 @@
-{% extends "material/frontend/base_lockscreen.html" %}
-{% load i18n material_form %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}{% trans 'Log in' %} - {{ block.super }}{% endblock %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    {% block body %}
 
-{% block content %}
-<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
-    {% if 'username' in form.fields %}
-        {% form %}
-            {% part form.username prefix %}<i class="material-icons prefix">account_box</i>{% endpart %}
-            {% part form.password prefix %}<i class="material-icons prefix">lock</i>{% endpart %}
-        {% endform %}
-    {% else %}
-        {% form %}{% endform %}
-    {% endif %}
-    
-    {% url 'admin_password_reset' as password_reset_url %}
-    {% if password_reset_url %}
-    <div class="password-reset-link">
-        <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-    </div>
-    {% endif %}
-    <div class="action right-align">
-        <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
-    </div>
-</form>
-{% endblock %}
+    <body>
+        <div class="container my-4">
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-sm-12">
+                    <div class="row">
+                        
+                        <ul>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'assignquiz' %}">Assign Quiz</a></li>
+                          
+                        </ul>
 
-{% block icon %}account_circle{% endblock %}
+
+                        {% block content %}
+                        <h1>Home Page</h1>
+                        {% endblock content %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    {% endblock body %}
+
+</html>

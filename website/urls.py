@@ -5,7 +5,7 @@
 
 from django.urls import include, path
 from .views import QuizList
-from .views import HomeView
+from .views import HomePageView, TestView
 from django.shortcuts import render
 from django.views import generic, static
 from material.frontend import urls as frontend_urls
@@ -16,7 +16,8 @@ from material.frontend import urls as frontend_urls
 urlpatterns = [  
     # path('',  include(frontend_urls)),
     path('list/', QuizList.as_view(), name='quiz_list'),
-    path('', HomeView.as_view(), name='home'),
+    path('', HomePageView.as_view(), name='home'),
+    path('assignquiz/', TestView.as_view(), name='assignquiz'),
     
 ]
 

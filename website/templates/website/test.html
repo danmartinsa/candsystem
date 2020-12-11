@@ -1,11 +1,5 @@
-<HTML>
-
-    <head>
-
-    </head>
-    {% block body %}
-
-    <body>
+{% extends "website/home.html" %}
+ 
         {% block content %}
         <form action="" method="post">
             {% csrf_token %}
@@ -23,7 +17,4 @@
             <input type="submit" value="Submit">
         </form>
         {% endblock content %}
-    </body>
-    {% endblock body %}
 
-</HTML>
