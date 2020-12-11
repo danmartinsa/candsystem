@@ -56,10 +56,11 @@ class TestView(FormView):
     form_class = selectAssignTestForm
     template_name ='website/test.html'
 
-    
-    
+    def save(self, request, commit=True):
+        user = request.user
+        data = self.cleaned_data
+        
     def form_valid(self, form):
-        form.save()
         return super(TestView, self).form_valid(form)
 
     def get_success_url(self):
