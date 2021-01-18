@@ -141,6 +141,9 @@ class QuizTake(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
+        context={
+                'question_form':self.QuestionForm(),
+                }
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
 
@@ -191,6 +194,13 @@ class QuizTake(FormView):
                 return self.final_result_anon()
 
         self.request.POST = {}
+        else:
+          context={
+                  'contact_form':self.Contact_FormSet(),
+                  }
+
+           return render(request,self.template_name,context)
+
         return super(QuizTake, self).get(self, self.request)
 
     def get_context_data(self, **kwargs):

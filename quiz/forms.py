@@ -1,6 +1,7 @@
 from django import forms
+from django.db.models.query import QuerySet
 from django.forms.widgets import RadioSelect, Textarea
-
+from django.forms import inlineformset_factory, formset_factory
 
 class QuestionForm(forms.Form):
     def __init__(self, question, *args, **kwargs):
@@ -15,3 +16,8 @@ class EssayForm(forms.Form):
         super(EssayForm, self).__init__(*args, **kwargs)
         self.fields["answers"] = forms.CharField(
             widget=Textarea(attrs={'style': 'width:100%'}))
+
+QuestionFormSet = formset_factory(
+    form=QuestionForm
+)
+

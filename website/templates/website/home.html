@@ -1,34 +1,125 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
 <!DOCTYPE html>
 <html lang="en">
+<head>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    {% block body %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <body>
-        <div class="container my-4">
-            <div class="row justify-content-center">
-                <div class="col-md-10 col-sm-12">
-                    <div class="row">
-                        
-                        <ul>
-                            <li><a href="{% url 'home' %}">Home</a></li>
-                            <li><a href="{% url 'assignquiz' %}">Assign Quiz</a></li>
-                          
-                        </ul>
+  <title>Quiz App</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/simple-sidebar.css" rel="stylesheet">
+
+  <style>
+  
+ #wrapper {
+    overflow-x: hidden;
+ }
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+}
+  </style>
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">Quiz App</div>
+      <div class="list-group list-group-flush">
+        <a href="{% url 'home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
+        <a href="{% url 'assignquiz' %}" class="list-group-item list-group-item-action bg-light">Assign Quiz</a>
+        <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action bg-light">Admin Site</a>
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+    
+    <div class="align-middle jumbotron  jumbotron-fluid">
+        <h1 class="display-4">Quiz App</h1>
+    </div>
+
+      <div class="container-fluid">
+      {% block content %}
+        <h1 class="mt-4">Landing Page</h1>
+        <p></p>
+      {% endblock content %}
+
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
 
 
-                        {% block content %}
-                        <h1>Home Page</h1>
-                        {% endblock content %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-    {% endblock body %}
+  <!-- Menu Toggle Script -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+
+</body>
 
 </html>
+

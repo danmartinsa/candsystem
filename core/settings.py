@@ -33,7 +33,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'bootstrap_admin', # always before django.contrib.admin
+ 
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -48,10 +50,14 @@ INSTALLED_APPS = [
     'website',
 
     #Material Design layout
-    'material.admin',
-    'material.admin.default',
-    'material',
-    'material.frontend',
+    # 'material.admin',
+    # 'material.admin.default',
+    # 'material',
+    # 'material.frontend',
+    
+
+    #bootstrap
+    'bootstrap4',
     
 ]
 
@@ -73,7 +79,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            
+            BASE_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {

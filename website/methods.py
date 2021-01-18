@@ -1,33 +1,38 @@
 from django.db.models.fields import CharField
-from quiz.models import Category, Quiz, Question, SubCategory
+from quiz.models import Category, Quiz, Question, Sitting, SubCategory
 from essay.models import Essay_Question
 from multichoice.models import MCQuestion
 from true_false.models import TF_Question
-from website.models import User, AssignTest
+from website.models import User, AssignTest, Role
 from itertools import chain
 
 from datetime import datetime
 
 
-def create_quiz(user_email, plang, position):
+def create_quiz(user_email, plang, position, interviewer):
     '''
     Function to associate a user with a quiz
     
     '''
-    user = User.objects.filter(email=user_email)
+    
     try:
-        userid = user[0].id
+        user = User.objects.get(email=user_email)
     except:
-        return None
+        user = User.objects.create_user(username=user_email,
+                                 email=user_email,
+                                 password='evs123',
+                                 is_candidate=True)
+        user.save()
+    
+    new_quiz = select_questions(plang , position)
+    if new_quiz is None:
+        raise TypeError
     else:
-        new_quiz = select_questions(plang , position)
-        if new_quiz is None:
-            raise TypeError
-        else:
-            set_quiz = Candidate.objects.create(userid=user, quiz_list_id=new_quiz)
-            set_quiz.save()
+        sitting = Sitting.objects.new_sitting(user=user, quiz=new_quiz)
+        set_quiz = AssignTest.objects.create(candidate=user, quiz=new_quiz, requestor=interviewer, role=position, sitting=sitting)
+        set_quiz.save()
 
-            return set_quiz
+        return new_quiz
 
 
 
@@ -36,25 +41,30 @@ def select_questions(plang, position):
     Function to create quiz selecting appropriate questions
 
     '''
-    category = Category.objects.filter(category=plang)  # selection for language
-    if category.count() > 0:
+    category = Category.objects.get(id=plang.id)  # selection for language
         
-        new_quiz = Quiz.objects.create()
-        new_quiz.title = str(datetime.now()) + plang + position
-        new_quiz.url = str(datetime.now()) + plang + position
-        new_quiz.save()
+    new_quiz = Quiz.objects.create()
+    new_quiz.title = str(datetime.now()) + category.category
+    new_quiz.url = str(datetime.now()) + category.category
+    new_quiz.category = category
+    new_quiz.save()
 
-        language_subset = SubCategory.objects.filter(category_id = category[0].id)
-        
-        MC_list = MCQuestion.objects.filter(sub_category__in=language_subset.values('id')) 
-        TF_list = TF_Question.objects.filter(sub_category__in=language_subset.values('id'))
-        # Essay_list = Essay_Question.objects.filter(sub_category__in=language_subset.values('id'))
-               
-        questions_list = list(chain(MC_list.values('id'), TF_list.values('id')))
+    language_subset = SubCategory.objects.filter(category_id = category.id)
 
-        for item in questions_list: 
-            question = Question.objects.get(id=item['id'])
-            question.quiz.add(new_quiz)         
-        return new_quiz.id
-    else:
-        return None
+    MC_list = MCQuestion.objects.filter(sub_category__in=language_subset.values('id')) 
+    TF_list = TF_Question.objects.filter(sub_category__in=language_subset.values('id'))
+    # Essay_list = Essay_Question.objects.filter(sub_category__in=language_subset.values('id'))
+            
+    questions_list = list(chain(MC_list.values('id'), TF_list.values('id')))
+
+    for item in questions_list: 
+        question = Question.objects.get(id=item['id'])
+        question.quiz.add(new_quiz)         
+    return new_quiz
+
+
+# select evaluators
+def select_evaluators(x, y):
+    evalutor1 = x
+    evaluator2 = y
+    return (evalutor1, evaluator2)
