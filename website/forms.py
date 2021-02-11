@@ -2,6 +2,11 @@ from django import forms
 from django.forms import fields
 from quiz.models import Category, SubCategory 
 from website.models import User, Role, AssignTest
+from django.forms.widgets import RadioSelect, Textarea
+from crispy_forms.bootstrap import InlineRadios
+
+
+from crispy_forms.helper import FormHelper, Layout
 
 class selectAssignTestForm(forms.Form):
 
@@ -9,20 +14,19 @@ class selectAssignTestForm(forms.Form):
         model = AssignTest
         fields = ['category', 'role', 'candidate']
 
-
-    category = forms.ChoiceField(
-        label="Select the type of test you want to create",
-        choices = [],
-    )
-
     role = forms.ChoiceField(
             label="Select which role you are hiring",
             required=True,
             choices = [],
     )
 
+    category = forms.ChoiceField(
+        label="Select the type of test you want to create",
+        choices = [],
+    )
+
     candidate = forms.CharField(
-            label="Recipient's email",
+            label="Candidate's Email",
             required=True,
     )
 
@@ -33,8 +37,33 @@ class selectAssignTestForm(forms.Form):
         self.fields['category'].choices= [(x['id'], x['category']) for x in Category.objects.values()] 
         self.fields['role'].choices= [(x['id'], x['name']) for x in Role.objects.values()] 
 	
-        
+
+from django.utils.safestring import mark_safe
+
+
     
+        
+class QuestionForm(forms.Form):
+
+    
+    def __init__(self, quiz, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        question_list = quiz.get_questions()
+        for question in question_list:
+            choice_list = [x for x in question.get_answers_list()]
+            field_name = str(question.id) + "answerset"
+            
+            self.fields[field_name] = forms.ChoiceField(
+                label=question.content,
+                choices=choice_list,
+                widget=RadioSelect(attrs={"class": "questionList"}),
+                required = False
+            )
+            self.helper = FormHelper()
+            self.helper.layout = Layout(
+                InlineRadios(str(question))
+            )
+        
 
     # candidate_role = forms.ChoiceField(
     #     label="Candidate Role",

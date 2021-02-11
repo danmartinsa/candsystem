@@ -10,116 +10,283 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <head>
 
-  <title>Quiz App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Quiz App</title>
 
-  <!-- Custom styles for this template -->
-  <link href="css/simple-sidebar.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-  
- #wrapper {
-    overflow-x: hidden;
- }
+    <!-- Custom styles for this template -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="c  https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
 
-#sidebar-wrapper {
-  min-height: 100vh;
-  margin-left: -15rem;
-  -webkit-transition: margin .25s ease-out;
-  -moz-transition: margin .25s ease-out;
-  -o-transition: margin .25s ease-out;
-  transition: margin .25s ease-out;
+    <link href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+      /* Sticky footer styles
+-------------------------------------------------- */
+      html {
+        position: relative;
+        min-height: 100%;
+      }
+
+      body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        line-height: 60px;
+        /* Vertically center the text there */
+        background-color: #f5f5f5;
+      }
+
+canvas{
+  height: 200px
 }
 
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 1.2rem;
-}
 
-#sidebar-wrapper .list-group {
-  width: 15rem;
-}
 
-#page-content-wrapper {
-  min-width: 100vw;
-}
+      /* Custom page CSS
+-------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
 
-#wrapper.toggled #sidebar-wrapper {
-  margin-left: 0;
-}
 
-@media (min-width: 768px) {
-  #sidebar-wrapper {
-    margin-left: 0;
-  }
 
-  #page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-  }
 
-  #wrapper.toggled #sidebar-wrapper {
-    margin-left: -15rem;
-  }
-}
-  </style>
+      code {
+        font-size: 80%;
+      }
 
-</head>
+      .page-item.active .page-link {
+        background-color: lightgrey !important;
+        border: 1px solid black;
+      }
 
-<body>
+      .page-link {
+        color: black !important;
+      }
 
-  <div class="d-flex" id="wrapper">
 
-    <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
-      <div class="sidebar-heading">Quiz App</div>
-      <div class="list-group list-group-flush">
-        <a href="{% url 'home' %}" class="list-group-item list-group-item-action bg-light">Home</a>
-        <a href="{% url 'assignquiz' %}" class="list-group-item list-group-item-action bg-light">Assign Quiz</a>
-        <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action bg-light">Admin Site</a>
+      .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background: none;
+        padding: 5px;
+        margin: 3px;
+        border-radius: 4px;
+        border: 1px solid #828282
+      }
+
+      .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 1px solid #2980B9 !important;
+        background-color: #2980B9 !important;
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2980B9), color-stop(100%, #2980B9)) !important;
+        background: -webkit-linear-gradient(top, #2980B9 0%, #2980B9 100%) !important;
+        background: -moz-linear-gradient(top, #2980B9 0%, #2980B9 100%) !important;
+        background: -ms-linear-gradient(top, #2980B9 0%, #2980B9 100%) !important;
+        background: -o-linear-gradient(top, #2980B9 0%, #2980B9 100%) !important;
+        background: linear-gradient(to bottom, #2980B9 0%, #2980B9 100%) !important;
+      }
+
+      .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        background: none;
+        padding: 10px 10px 10px 10px;
+        color: black !important;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    {% block sidebar %}
+
+    {% if user.is_candidate is not True %}
+
+    {% block header %}
+
+
+    <header>
+
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="background-color: #FFFFFF">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+
+            {% if user.is_candidate %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            {% else %}
+
+            {% if user.is_editor  %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin:index' %}">Question Editor</a>
+            </li>
+
+            {% elif user.is_superuser  %}
+           
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'assignquiz' %}">Assign Quiz</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'insights' %}">Insights</a>
+            </li>
+
+            {% endif %}
+
+            {% endif %}
+
+            <h2 style="display:flex; margin-left: 400pt; self-align: center; text-align: center"><a class="navbar-brand"
+                href="#">Test Generation Tool</a></h2>
+
+          </ul>
+
+
+          <form class="form-inline mt-2 mt-md-0">
+            <ul class="navbar-nav mr-auto">
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <span class="nav-link"> Hi {{ user.username }}!</span>
+
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-outline-success my-2 my-sm-0" href="{% url 'logout' %}"> logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="btn btn-outline-success my-2 my-sm-0" href="{% url 'login' %}"> login</a>
+              </li>
+              {% endif %}
+            </ul>
+          </form>
+        </div>
+      </nav>
+    </header>
+
+    {% endblock header %}
+    {% endif %}
+    <main style="padding-top:90px; padding-right:20px; ">
+      {% endblock sidebar%}
+
+      <div>
+        {% block content %}
+        {% if user.is_authenticated %}
+        {% if user.is_candidate %}
+        <h2>Please Use the link shared by email</h2>
+        {% else %}
+
+        <div style="width: 80%; display:table; margin-left:10%">
+          
+            <div style="display:table-cell; vertical-align:top;">
+              <h3>List of tests sent by <b> {{user.username}} </b></h3>
+              <table class="table table-striped" id="testList">
+                <thead class="thead-dark">
+                  <tr>
+
+                    <th>Candidate</th>
+                    <th>Role</th>
+                    <th>Language</th>
+                    <th>Date created</th>
+                    <th>Date received</th>
+                    <th>Status</th>
+                    <th>More Info</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in data  reversed %}
+                  <tr>
+
+                    <td>{{ item.candidate }}</td>
+                    <td>{{ item.role }}</td>
+                    <td>{{ item.quiz.category }}</td>
+                    <td>{{ item.date_created }}</td>
+                    <td>
+                      {% if  item.sitting.end  %}
+                      {{ item.sitting.end}}
+                      {% else %}
+                      -
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if item.sitting.complete %}
+                      Completed
+                      {% else %}
+                      Not Completed
+                      {% endif %}
+
+                    </td>
+
+                    <td> <a href="http://localhost/8080/quiz/{{ item.quiz.url }}"> detail</a> </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            
+          </div>
+          
+        </div>
       </div>
-    </div>
-    <!-- /#sidebar-wrapper -->
+      {% endif %}
+      {% else %}
+      <h1>Please Login</h1>
+      {% endif %}
 
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-    
-    <div class="align-middle jumbotron  jumbotron-fluid">
-        <h1 class="display-4">Quiz App</h1>
-    </div>
-
-      <div class="container-fluid">
-      {% block content %}
-        <h1 class="mt-4">Landing Page</h1>
-        <p></p>
       {% endblock content %}
 
-      </div>
-    </div>
-    <!-- /#page-content-wrapper -->
+      <!-- /#wrapper -->
 
-  </div>
-  <!-- /#wrapper -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <!-- Datatables -->
+      <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+      <!-- Bootstrap -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+      </script>
+      <script>
 
 
-  <!-- Menu Toggle Script -->
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-  </script>
 
-</body>
+        $("#menu-toggle").click(function (e) {
+          e.preventDefault();
+          $("#wrapper").toggleClass("toggled");
+        });
+
+        $(document).ready(function () {
+          $('#testList').DataTable({
+            "pagingType": "simple_numbers"
+          });
+        })
+      </script>
+
+  </body>
 
 </html>
-

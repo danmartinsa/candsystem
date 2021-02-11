@@ -361,6 +361,7 @@ class QuizTake(FormView):
         return render(self.request, 'result.html', results)
 
 
+
 def anon_session_score(session, to_add=0, possible=0):
     """
     Returns the session score for non-signed in users.
@@ -383,3 +384,4 @@ def anon_session_score(session, to_add=0, possible=0):
         session["session_score_possible"] += possible
 
     return session["session_score"], session["session_score_possible"]
+

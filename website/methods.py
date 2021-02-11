@@ -3,10 +3,12 @@ from quiz.models import Category, Quiz, Question, Sitting, SubCategory
 from essay.models import Essay_Question
 from multichoice.models import MCQuestion
 from true_false.models import TF_Question
-from website.models import User, AssignTest, Role
+from website.models import User, AssignTest, Role, Rules
 from itertools import chain
+import random
 
 from datetime import datetime
+import string
 
 
 def create_quiz(user_email, plang, position, interviewer):
@@ -14,6 +16,8 @@ def create_quiz(user_email, plang, position, interviewer):
     Function to associate a user with a quiz
     
     '''
+
+    
     
     try:
         user = User.objects.get(email=user_email)
@@ -25,16 +29,18 @@ def create_quiz(user_email, plang, position, interviewer):
         user.save()
     
     new_quiz = select_questions(plang , position)
+     
     if new_quiz is None:
         raise TypeError
     else:
-        sitting = Sitting.objects.new_sitting(user=user, quiz=new_quiz)
+        sitting = Sitting.objects.new_sitting(user=user, quiz=new_quiz, time=200)
         set_quiz = AssignTest.objects.create(candidate=user, quiz=new_quiz, requestor=interviewer, role=position, sitting=sitting)
         set_quiz.save()
 
         return new_quiz
 
-
+def to_integer(dt_time):
+    return 10000*dt_time.year + 100*dt_time.month + dt_time.day
 
 def select_questions(plang, position):
     '''
@@ -42,29 +48,49 @@ def select_questions(plang, position):
 
     '''
     category = Category.objects.get(id=plang.id)  # selection for language
-        
+    
     new_quiz = Quiz.objects.create()
-    new_quiz.title = str(datetime.now()) + category.category
-    new_quiz.url = str(datetime.now()) + category.category
+    new_quiz.title = str(datetime.now()) + position.name  +category.category
     new_quiz.category = category
+
+    letters = string.ascii_letters + string.digits
+    result_str = ''.join(random.choice(letters) for i in range(16))
+
+    new_quiz.url = str(str(to_integer(datetime.now())) +  result_str)
     new_quiz.save()
 
+    ruleset = Rules.objects.get(role=position)
     language_subset = SubCategory.objects.filter(category_id = category.id)
 
-    MC_list = MCQuestion.objects.filter(sub_category__in=language_subset.values('id')) 
-    TF_list = TF_Question.objects.filter(sub_category__in=language_subset.values('id'))
-    # Essay_list = Essay_Question.objects.filter(sub_category__in=language_subset.values('id'))
-            
-    questions_list = list(chain(MC_list.values('id'), TF_list.values('id')))
+    basic_q = []
+    interm_q = []
+    adv_q =[]
+    for item in language_subset:
+        level = item.sub_category
+        print(level)
+        if level == "Basic" and ruleset.n_basic > 0:
+            basic_q = random.sample([i for i in MCQuestion.objects.filter(sub_category=item.id)], k= ruleset.n_basic)
+            print(len(basic_q), basic_q)
+        elif level == "Intermediate" and ruleset.n_intermediate > 0:
+            interm_q = random.sample([i for i in MCQuestion.objects.filter(sub_category=item.id)], k= ruleset.n_intermediate)
+            print(len(interm_q), interm_q)
+        elif level == "Advanced" and ruleset.n_advanced > 0:
+            adv_q = random.sample([i for i in MCQuestion.objects.filter(sub_category=item.id)], k= ruleset.n_advanced)
+            print(len(adv_q), adv_q)
+  
+
+
+    questions_list = list(chain(basic_q, interm_q, adv_q))
+    print(len(questions_list))
 
     for item in questions_list: 
-        question = Question.objects.get(id=item['id'])
+        question = Question.objects.get(id=item.id)
         question.quiz.add(new_quiz)         
     return new_quiz
 
 
 # select evaluators
 def select_evaluators(x, y):
-    evalutor1 = x
+    evaluator1 = x
     evaluator2 = y
-    return (evalutor1, evaluator2)
+    return (evaluator1, evaluator2)

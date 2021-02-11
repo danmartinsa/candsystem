@@ -15,6 +15,7 @@ from django.conf import settings
 from model_utils.managers import InheritanceManager
 
 
+
 class CategoryManager(models.Manager):
 
     def new_category(self, category):
@@ -83,6 +84,7 @@ class Quiz(models.Model):
     category = models.ForeignKey(
         Category, null=True, blank=True,
         verbose_name=_("Category"), on_delete=models.CASCADE)
+    
 
     random_order = models.BooleanField(
         blank=False, default=False,
@@ -306,7 +308,7 @@ class Progress(models.Model):
 
 class SittingManager(models.Manager):
 
-    def new_sitting(self, user, quiz):
+    def new_sitting(self, user, quiz, time):
         if quiz.random_order is True:
             question_set = quiz.question_set.all() \
                                             .select_subclasses() \
@@ -333,7 +335,8 @@ class SittingManager(models.Manager):
                                   incorrect_questions="",
                                   current_score=0,
                                   complete=False,
-                                  user_answers='{}')
+                                  user_answers='{}',
+                                  time=time)
         return new_sitting
 
     def user_sitting(self, user, quiz):
@@ -375,6 +378,8 @@ class Sitting(models.Model):
 
     quiz = models.ForeignKey(Quiz, verbose_name=_("Quiz"), on_delete=models.CASCADE)
 
+    time = models.IntegerField(verbose_name=_("Total Time"))
+
     question_order = models.CharField(
         max_length=1024,
         verbose_name=_("Question Order"),
@@ -391,7 +396,9 @@ class Sitting(models.Model):
         verbose_name=_("Incorrect questions"),
         validators=[validate_comma_separated_integer_list])
 
-    current_score = models.IntegerField(verbose_name=_("Current Score"))
+    current_score = models.IntegerField(verbose_name=_("Total Score"))
+
+    pct_score = models.DecimalField (verbose_name=_("Percentage Score"), max_digits=6, decimal_places=2, blank=True, null=True)
 
     complete = models.BooleanField(default=False, blank=False,
                                    verbose_name=_("Complete"))
@@ -521,6 +528,10 @@ class Sitting(models.Model):
 
         return questions
 
+    def __str__(self):
+        name = self.quiz.title, self.user.username
+        return str(name)
+
     @property
     def questions_with_user_answers(self):
         return {
@@ -539,6 +550,11 @@ class Sitting(models.Model):
         answered = len(json.loads(self.user_answers))
         total = self.get_max_score
         return answered, total
+
+    # def save(self):
+    #     self.end = datetime.now()
+    #     super(Sitting, self).save()
+
 
 
 @python_2_unicode_compatible
@@ -574,6 +590,8 @@ class Question(models.Model):
                                help_text=_("Enter the question text that "
                                            "you want displayed"),
                                verbose_name=_('Question'))
+    
+    weight = models.DecimalField(max_digits=4, decimal_places=2)
 
     explanation = models.TextField(max_length=2000,
                                    blank=True,

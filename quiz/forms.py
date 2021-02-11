@@ -17,7 +17,5 @@ class EssayForm(forms.Form):
         self.fields["answers"] = forms.CharField(
             widget=Textarea(attrs={'style': 'width:100%'}))
 
-QuestionFormSet = formset_factory(
-    form=QuestionForm
-)
+
 

@@ -1,0 +1,201 @@
+{% extends "website/home.html" %}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block content %}
+<div class="container">
+    <div style="width: 100%; display:table;">
+        <div style="display:table-row">
+
+            <div style="display:table-cell;">
+                <canvas id="chart-area"></canvas>
+            </div>
+
+            <div style="display:table-cell;">
+                <canvas id="chart-area1"></canvas>
+            </div>
+
+
+            <div style="display:table-cell;">
+                <canvas id="chart-area2"></canvas>
+            </div>
+        </div>
+        <div style="display:table-row; width:100%">
+            <div style="display:table-cell; padding-top: 100px">
+                <canvas id="chart-bar"></canvas>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+      <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+
+
+      <!-- Menu Toggle Script -->
+      <script>
+        total = {% autoescape off %}{{ ntotal }}{% endautoescape %};
+        complete = {% autoescape off %}{{ ncomplete }}{% endautoescape %};
+        var config = {
+          type: 'pie',
+          data: {
+            datasets: [{
+              data: [
+                total,
+                complete
+              ],
+              backgroundColor: [
+                window.chartColors.red,
+                window.chartColors.blue,
+              ],
+              label: 'Dataset 1'
+            }],
+            labels: [
+              'Sent',
+              'Complete',
+            ]
+          },
+          options: {
+            responsive: true,
+            title: {
+              display: true,
+              text: 'Last 30 Days'
+            }
+          }
+        };
+
+
+        var color = Chart.helpers.color;
+        var barChartData = {
+          labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+          datasets: [{
+            label: 'New Entries',
+            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+              1,
+              2,
+              1,
+              5,
+              0,
+              0,
+              1
+            ]
+          }]
+        }
+
+
+
+
+        var positionChart = {
+          type: 'pie',
+          data: {
+            datasets: [{
+              data: [
+                2,
+                4,
+                5,
+                2,
+              ],
+              backgroundColor: [
+                window.chartColors.red,
+                window.chartColors.blue,
+                window.chartColors.orange,
+                window.chartColors.green,
+              ],
+              label: 'Dataset 1'
+            }],
+            labels: [
+              'Pre-Hire',
+              'BA',
+              'SBA',
+              'PE',
+              
+            ]
+          },
+           options: {
+            responsive: true,
+            title: {
+              display: true,
+              text: 'Position'
+            }
+          }
+
+        };
+
+        
+      
+        var languageChart = {
+          type: 'pie',
+          data: {
+            datasets: [{
+              data: [
+                3,
+                7,
+                1,
+                2,
+              ],
+              backgroundColor: [
+                window.chartColors.red,
+                window.chartColors.blue,
+                window.chartColors.orange,
+                window.chartColors.green,
+              ],
+              label: 'Dataset 1'
+            }],
+            labels: [
+              'SAS',
+              'Python',
+              'SQL',
+              'VBA',
+              
+            ]
+          },
+           options: {
+            responsive: true,
+            title: {
+              display: true,
+              text: 'Language'
+            }
+          }
+
+        };
+
+      
+
+        window.onload = function () {
+          var ctx = document.getElementById('chart-area').getContext('2d');
+          window.myPie = new Chart(ctx, config);
+          
+
+          var barctx = document.getElementById('chart-bar').getContext('2d');
+          window.myBar = new Chart(barctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Last 30 Days Bar'
+              }
+            }
+          });
+          var ctx1 = document.getElementById('chart-area1').getContext('2d');
+          window.myPie1 = new Chart(ctx1, positionChart);
+          var ctx2 = document.getElementById('chart-area2').getContext('2d');
+          window.myPie2 = new Chart(ctx2, languageChart);
+        };
+
+        </script>
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "website/home.html" %}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+        {% block content %}
+         <div style="padding-top: 50px">
+        {% if  user.is_candidate  %}
+            <h2>Responses recorded succesfully. Thank you for your participation. </h2>
+            <h2>Stay put, you will get feedback as soon as possible. </h2>
+        {% else %}
+            <h1>Questionnaire sent succesfully </h1> <br>
+            <table class = "table">
+            {% comment %} <tr><td><b>Requestor: </b></td><td> {{ data.requestor }}</td></tr> {% endcomment %}
+            <tr><td><b>Candidate: </b></td><td> {{ data.candidate }}</td></tr>
+              
+            <tr><td><b>Role: </b></td><td> {{ data.role }}</td></tr>
+            <tr><td><b>Skill: </b></td><td> {{ data.quiz.category }}</td></tr>
+          
+            {% comment %} <tr><td><b>URL: </b></td><td> http://localhost/8080/quiz/{{ data.quiz.url }}/take</td></tr> {% endcomment %}
+            </table>
+        {% endif %}
+            
+        </div>
+{% endblock content %}
+

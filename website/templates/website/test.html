@@ -8,10 +8,23 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
         {% block content %}
-        <h1>
-            Candidate Form
+        <style>
+        
+        .form-control {
+            width:300px;
+            height:auto
+        }
+        </style>
+        <div style = "margin: 30px 10% 5% 10%;
+            width:800px;
+         
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding-left: 50px;">
+        <h1 style="border-bottom: 1px solid gray; margin-right:300px">
+            Questionnaire Selection
         </h1>
-        <form action="" method="post" class="form">
+        <br>
+        <form action="" method="post" class="form" style="padding-bottom: 35px" >
             {% csrf_token %}
             {% bootstrap_form form %}
             
@@ -21,5 +34,6 @@
     </button>
             {% endbuttons %}
         </form>
+        </div>
         {% endblock content %}
 

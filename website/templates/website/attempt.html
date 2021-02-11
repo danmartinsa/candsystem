@@ -1,0 +1,185 @@
+{% comment %} {% extends "website/home.html" %} {% endcomment %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+
+{% load i18n%}
+
+{% block sidebar %}
+{% block header %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> 
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid" style="text-align: center; padding-top:20px">
+    <p style="font-size:17pt; color:red ">Test ends in <b><span id="counter"> </span> </b> </p>
+  </div>
+</nav>
+
+{% endblock header %}
+{% endblock sidebar %}
+{% block content %}
+
+{% block title %} <h1>
+</h1>
+{% endblock %}
+
+{% if test.sitting.complete %}
+    <h2>Thank you for your participation. </h2>
+    <h2>Stay put, you will get feedback as soon as possible. </h2>
+{% else %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+var time ={% autoescape off %}{{ sitting.time }}{% endautoescape %};
+
+jQuery(function ($) {
+    var fiveMinutes = 200,
+        display = $('#time');
+    startTimer(fiveMinutes, display);
+});
+
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.text(minutes + ":" + seconds);
+        $("#counter").text(minutes + "m:" + seconds+"s");
+
+        if (--timer < 0) {
+            //alert("Time is up!");
+            TimeUp()
+            //location.reload(true)
+            clearInterval(interval);  // this will stop the timer
+        }
+    }, 1000);
+}
+
+function TimeUp() {
+     $('<div></div>').appendTo('body')
+    .html('<div><h6>' + "60 min have been passed. <br> Your test will now be submitted" + '</h6></div>')
+    .dialog({
+      modal: true,
+      title: "Time's Up! ",
+      zIndex: 10000,
+      autoOpen: true,
+      width: 'auto',
+      resizable: false,
+      buttons: {
+        OK: function() {
+          // $(obj).removeAttr('onclick');                                
+          // $(obj).parents('.Parent').remove();                    
+
+          $(this).dialog("close");
+        },
+        
+      },
+      close: function(event, ui) {
+        document.forms["questionnarieForm"].submit();
+        $(this).remove();
+      }
+    })
+}
+
+function ConfirmDialog(message) {
+  $('<div></div>').appendTo('body')
+    .html('<div><h6>' + message + '?</h6></div>')
+    .dialog({
+      modal: true,
+      title: 'Confirmation',
+      zIndex: 10000,
+      autoOpen: true,
+      width: 'auto',
+      resizable: false,
+      buttons: {
+        Yes: function() {
+          // $(obj).removeAttr('onclick');                                
+          // $(obj).parents('.Parent').remove();
+
+          document.forms["questionnarieForm"].submit()
+                    
+
+          $(this).dialog("close");
+        },
+        No: function() {
+           $(this).dialog("close");
+        }
+      },
+      close: function(event, ui) {
+        $(this).remove();
+      }
+    })
+}
+    
+
+function SubmitFunction(){
+                //submitted.innerHTML="Time is up!";
+                if($('input[type="radio"]:checked').length < 10){
+                    ConfirmDialog("There are question not answered, want to send?")
+                } else {
+                    document.forms["questionnarieForm"].submit()
+                   
+                }                
+                
+                
+
+               }
+
+timeoff = 0
+
+$(window).blur(function(){
+  timeoff = Date.now()
+});
+$(window).focus(function(){
+  timeoff = (Date.now() - timeoff)/1000
+  console.log(timeoff)
+});
+
+
+</script>
+
+
+
+
+
+<div class="container-fluid" style=="padding-top:100px">
+{% block description %}
+
+
+
+<h2 style="text-align: center; padding-top:70px">{{quiz.category}} Questionnaire </h2>
+<br><br>
+
+
+{% endblock %}
+
+<style>
+.questionList {
+
+    border-bottom: 3px solid
+  
+}
+</style>
+<div>
+    <div style="padding: 10px 10% 10px 10%; size: 70%">
+        <form action="" method="POST" style="padding 5px 5px 5px " id="questionnarieForm">
+            {% csrf_token %}
+            {% for item in  form %}
+            <b> {{item.label}} </b>
+            {{item}}
+            {% endfor %}
+            <div style="text-align:center; padding-top:30px">
+              <input class="btn btn-primary" value="Submit" onclick="SubmitFunction()">
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock content %}
+
+</div>

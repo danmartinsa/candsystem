@@ -2,6 +2,8 @@
 {% load i18n%}
 
 {% load quiz_tags %}
+{% block sidebar %}
+{% endblock sidebar %}
 
 {% block title %} {{ quiz.title }} {% endblock %}
 {% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
@@ -9,12 +11,6 @@
 {% block content %}
 
 {% if question %}
-
-{% if progress %}
-<div style="float: right;">
-{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
-</div>
-{% endif %}
 
 <p>
   <small class="muted">{% trans "Question category" %}:</small>
@@ -39,7 +35,18 @@
 	{% endfor %}
 
   </ul>
-  <input type="submit" value={% trans "S" %} class="btn btn-large btn-block btn-warning" >
+  <div class="row">
+  
+  
+  {% if previous.answers %}
+    <div class="col-sm">
+    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-large btn-block btn-warning" class>Back</a>
+    </div>
+  {% endif %}
+  <div class="col-sm">
+    <input type="submit" value={% trans "Next" %} class="btn btn-large btn-block btn-warning" >
+  </div>
+  </div>
 </form>
 
 {% endif %}

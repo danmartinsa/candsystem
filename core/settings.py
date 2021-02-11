@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
     #bootstrap
     'bootstrap4',
+    'crispy_forms',
     
 ]
 
@@ -79,7 +80,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -92,6 +92,14 @@ TEMPLATES = [
         },
     },
 ]
+
+#DataFlair
+EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'danilo.m.a@gmail.com'
+EMAIL_HOST_PASSWORD = 'hfsyjkilblmtxqbe'
 
 WSGI_APPLICATION = 'core.wsgi.application'
 AUTH_USER_MODEL = 'website.User'
@@ -151,3 +159,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'NOTSET',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'NOTSET',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'ERROR'
+        }
+    }
+}
