@@ -90,7 +90,30 @@ def select_questions(plang, position):
 
 
 # select evaluators
-def select_evaluators(x, y):
-    evaluator1 = x
-    evaluator2 = y
-    return (evaluator1, evaluator2)
+def select_evaluators(Sitting):
+    """
+        For a Sitting (relational between Quiz and Candidate)
+        Select 2 evaluators
+    """
+    evaluators  = random.sample([i for i in User.objects.filter(is_evaluator=True)], k = 2)
+    
+    return (evaluators[0], evaluators[1])
+
+def evaluate(User, Sitting):
+    return 0 #Subjective Score for a 
+
+
+def calculateScore(scoreEval1, scoreEval2):
+    """
+        scoreEval1 = score 1st evaluator
+        scoreEval2 = score 2nd evaluator
+        Return average bettween final score
+    """
+   
+    return -0 #SubjectiveScore
+
+def subjectiveEval(Sitting):
+    return email #email Message to requestor with final score 
+
+
+

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Quiz, Category, Sitting, SubCategory, Progress, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
-from essay.models import Essay_Question
+from essay.models import Essay_Question, Essay_Answer
 
 
 class AnswerInline(admin.TabularInline):
