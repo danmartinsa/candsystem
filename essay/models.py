@@ -33,11 +33,12 @@ class Essay_Question(Question):
 class Essay_Answer(models.Model):
     question = models.ForeignKey(Essay_Question, verbose_name=_("Question"), on_delete=models.CASCADE)
 
-    content = models.CharField(max_length=1000,
-                               blank=False,
-                               help_text=_("Enter the answer text that "
-                                           "you want displayed"),
-                               verbose_name=_("Content"))
+    content = models.TextField(
+        blank=False,
+        help_text=_("Enter the answer text that "
+                    "you want displayed"),
+        verbose_name=_("Content")
+    )
 
     def __str__(self):
         return self.content

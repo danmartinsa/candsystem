@@ -11,6 +11,11 @@ from essay.models import Essay_Question, Essay_Answer
 
 class AnswerInline(admin.TabularInline):
     model = Answer
+    extra = 4
+
+class Essay_AnswerInline(admin.TabularInline):
+    model = Essay_Answer
+    extra = 1
 
 
 class QuizAdminForm(forms.ModelForm):
@@ -98,9 +103,12 @@ class TFQuestionAdmin(admin.ModelAdmin):
 class EssayQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'sub_category', 'quiz', 'explanation', )
+    fields = ('content', 'category', 'sub_category', 'weight',
+    'figure', 'quiz', 'explanation' )
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
+
+    inlines = [Essay_AnswerInline]
 
 
 
