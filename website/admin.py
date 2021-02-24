@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.sites import site
 
-from .models import AssignTest, User, Role, Rules
+from .models import AssignTest, User, Role, Rules, Evaluation, EvaluationScore
 from quiz.models import Category
 
 class AssignTestAdmin(admin.ModelAdmin):
@@ -26,13 +26,24 @@ class RulesAdmin(admin.ModelAdmin):
         ('n_intermediate_subj',  'mark_intermediate_subj'),
         ('n_advanced_subj',  'mark_advanced_subj')      
     )
-    
 
+class EvaluationScoreInline(admin.TabularInline):
+    model = EvaluationScore
+    extra = 1
+    
+class EvaluationAdmin(admin.ModelAdmin):
+    class Meta:
+        model = Evaluation
+    
+    inlines = [EvaluationScoreInline]
+
+    
  
 admin.site.register(AssignTest, AssignTestAdmin)
 admin.site.register(Role)
 admin.site.register(Rules, RulesAdmin)
 admin.site.register(User)
+admin.site.register(Evaluation, EvaluationAdmin)
 
 
 # Register your models here.

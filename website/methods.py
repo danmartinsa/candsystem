@@ -113,7 +113,7 @@ def calculateScore(scoreEval1, scoreEval2):
     return -0 #SubjectiveScore
 
 def subjectiveEval(Sitting):
-    return email #email Message to requestor with final score 
+    return 0 #email Message to requestor with final score 
 
 
 

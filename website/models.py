@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 # from django.db.models.lookups import PostgresOperatorLookup
 from django.utils.translation import ugettext_lazy as _
-from quiz.models import Quiz, Sitting
+from quiz.models import Quiz, Sitting, Question
 from datetime import datetime
 
 class User(AbstractUser):
@@ -81,9 +81,16 @@ class AssignTest(models.Model):
 class Evaluation(models.Model):
     sitting =  models.ForeignKey(Sitting, on_delete=models.CASCADE, unique=False, null=True, related_name="sitting")
     evaluator = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, null=True, related_name="evaluator")
-    score =  models.IntegerField(verbose_name=_("Objective Basic Questions"))
-    comments = models.TextField(blank=False, verbose_name=_("Comment"))
-    
+    SubjectiveScore =  models.IntegerField(verbose_name=_("subjective questions scoreQuestions"))
+    # comments = models.TextField(blank=False, verbose_name=_("Comment"))
+
+class EvaluationScore(models.Model):
+    evaluation = models.ForeignKey(Evaluation,  on_delete=models.CASCADE, unique=False, null=True, related_name="evaluation")
+    question = models.ForeignKey(Question,  on_delete=models.CASCADE, unique=False, null=True, related_name="Question")
+    score = models.IntegerField(blank= False, null = False, verbose_name=_("individual question score"))
+    comment = models.TextField(blank=True,null = True, verbose_name=_("Comment"))
+
+
 
 
 # Create your models here.
