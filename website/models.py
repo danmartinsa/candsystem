@@ -78,6 +78,12 @@ class AssignTest(models.Model):
         return str(name)
         
 
+class Evaluation(models.Model):
+    sitting =  models.ForeignKey(Sitting, on_delete=models.CASCADE, unique=False, null=True, related_name="sitting")
+    evaluator = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, null=True, related_name="evaluator")
+    score =  models.IntegerField(verbose_name=_("Objective Basic Questions"))
+    comments = models.TextField(blank=False, verbose_name=_("Comment"))
+    
 
 
 # Create your models here.

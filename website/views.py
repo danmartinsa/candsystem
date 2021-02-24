@@ -29,6 +29,7 @@ from website.models import User, Role, AssignTest
 
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
+from essay.models import Essay_Question, Essay_Answer
 
 
 @method_decorator([login_required, candidate_required], name='dispatch')
@@ -204,7 +205,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic.detail import SingleObjectMixin
 
-
+    
 @method_decorator([login_required], name='dispatch')
 class Taketest(FormView):
     form_class = QuestionForm
@@ -254,17 +255,21 @@ class Taketest(FormView):
             guess = form.cleaned_data[field_name]
             print(guess)
 
-            flag_blank = False
-            
-            if guess != '':
-                is_correct = question.check_if_correct(guess)
-                user_answers.append((question.content, is_correct))
-            else :
-                flag_blank = True
-                is_correct = False
+            if question.__class__ is Essay_Question:
+                is_correct = ""
+                user_answers.append((str(question.id), question.content, guess))
+            else:
+                flag_blank = False
+                
+                if guess != '':
+                    is_correct = question.check_if_correct(guess)
+                    user_answers.append((str(question.id), question.content, is_correct))
+                else :
+                    flag_blank = True
+                    is_correct = False
 
             total_weight = total_weight + question.weight
-            if is_correct == True:
+            if (is_correct == True):
                 score= score + (1 * question.weight)
         
         
@@ -287,6 +292,25 @@ class Taketest(FormView):
         send_mail(
                 email_subject, email_body,
                 "<danilo.m.a@gmail.com>", [self.test.requestor, "danilo.m.a@gmail.com"])
+
+        evaluators = [self.test.evaluator_1, self.test.evaluator_2]
+
+        for eval in evaluators:
+            print(eval)
+            email_subject = "Questionnaire has been completed. Please check candidate Subjective question answer and provide a score." 
+            email_body = """
+            On date %s Questionnaire completed by %s.
+                Role: %s
+                Skill: %s
+            """ % (str(date.today()), 
+                    email, 
+                    self.test.role, 
+                    self.sitting.quiz.category
+                      
+                )
+            send_mail(
+                    email_subject, email_body,
+                    "<danilo.m.a@gmail.com>", [eval, "danilo.m.a@gmail.com"])
 
         return super(Taketest, self).form_valid(form)
 

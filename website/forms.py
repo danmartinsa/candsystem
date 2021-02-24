@@ -41,29 +41,49 @@ class selectAssignTestForm(forms.Form):
 from django.utils.safestring import mark_safe
 
 
-    
+from essay.models import Essay_Question
         
 class QuestionForm(forms.Form):
 
-    
     def __init__(self, quiz, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
         question_list = quiz.get_questions()
         for question in question_list:
-            choice_list = [x for x in question.get_answers_list()]
             field_name = str(question.id) + "answerset"
-            
-            self.fields[field_name] = forms.ChoiceField(
-                label=question.content,
-                choices=choice_list,
-                widget=RadioSelect(attrs={"class": "questionList"}),
-                required = False
+            if question.__class__ is Essay_Question:
+                self.fields[field_name] = forms.CharField(
+                    label=question.content,
+                    widget=Textarea(attrs={'style': 'width:100%'}),
+                    required = False
+                    )
+            else:
+                choice_list = [x for x in question.get_answers_list()]
+                
+                
+                self.fields[field_name] = forms.ChoiceField(
+                    label=question.content,
+                    choices=choice_list,
+                    widget=RadioSelect(attrs={"class": "questionList"}),
+                    required = False
+                )
+                self.helper = FormHelper()
+                self.helper.layout = Layout(
+                    InlineRadios(str(question))
+                )
+
+class EvaluateForm(forms.Form):
+    def __init__(self, sitting, evaluation, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        question_list = sitting.quiz.get_questions()
+        for question in question_list:
+            field_name = str(question.id) + "answerset"
+            self.fields[field_name] = forms.CharField(
+                        label=question.content,
+                        widget=Textarea(attrs={'style': 'width:100%'}),
+                        required = False
             )
-            self.helper = FormHelper()
-            self.helper.layout = Layout(
-                InlineRadios(str(question))
-            )
-        
+            field_name = str(question.id) + "candanswer"
+      
 
     # candidate_role = forms.ChoiceField(
     #     label="Candidate Role",

@@ -24,8 +24,8 @@ class RulesAdmin(admin.ModelAdmin):
         ('n_advanced_obj',  'mark_advanced_obj'),
         ('n_basic_subj',  'mark_basic_subj'),
         ('n_intermediate_subj',  'mark_intermediate_subj'),
-        ('n_advanced_subj',  'mark_advanced_subj')
-                )
+        ('n_advanced_subj',  'mark_advanced_subj')      
+    )
     
 
  
