@@ -31,8 +31,7 @@ urlpatterns = urlpatterns + [
     url(r'^(?P<quiz_name>[\w-]+)/take/$',
         view=Taketest.as_view(),
         name='quiz_question'),
-    url(r'^success/$',success,name='success'),
-    
+    url(r'^success/$',success,name='success'),   
 ]
 
 # urlpatterns = [

@@ -72,9 +72,9 @@ class QuestionForm(forms.Form):
                 )
 
 class EvaluateForm(forms.Form):
-    def __init__(self, sitting, evaluation, *args, **kwargs):
+    def __init__(self, evaluation, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
-        question_list = sitting.quiz.get_questions()
+        question_list = evaluation.sitting.quiz.get_questions()
         for question in question_list:
             field_name = str(question.id) + "answerset"
             self.fields[field_name] = forms.CharField(

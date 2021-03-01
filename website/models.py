@@ -81,7 +81,7 @@ class AssignTest(models.Model):
 class Evaluation(models.Model):
     sitting =  models.ForeignKey(Sitting, on_delete=models.CASCADE, unique=False, null=True, related_name="sitting")
     evaluator = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, null=True, related_name="evaluator")
-    SubjectiveScore =  models.IntegerField(verbose_name=_("subjective questions scoreQuestions"))
+    SubjectiveScore =  models.IntegerField(blank=True,null = True, verbose_name=_("subjective questions scoreQuestions"))
     # comments = models.TextField(blank=False, verbose_name=_("Comment"))
 
 class EvaluationScore(models.Model):

@@ -1,0 +1,53 @@
+{% extends "website/home.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="width: 80%; display:table; margin-left:10%">
+  <div style="display:table-cell; vertical-align:top;">
+    <h3>List of tests sent by <b> {{user.username}} </b></h3>
+    <table class="table table-striped" id="testList">
+      <thead class="thead-dark">
+        <tr>
+          <th>Language</th>
+          <th>Date created</th>
+          <th>Date received</th>
+          <th>Status</th>
+          <th>Evaluate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data reversed %}
+        <tr>
+          <td>{{ item.sitting.quiz.category }}</td>
+          <td>{{ item.date_created }}</td>
+          <td>
+            {% if  item.sitting.end  %}
+            {{ item.sitting.end}}
+            {% else %}
+            -
+            {% endif %}
+          </td>
+          <td>
+            {% if item.sitting.complete %}
+            Completed
+            {% else %}
+            Not Completed
+            {% endif %}
+
+          </td>
+
+          <td> <a href="http://localhost/8080/quiz/{{ item.quiz.url }}"> detail</a> </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% else %}
+<h1>Please Login</h1>
+{% endif %}
+
+
+{% endblock content %}

@@ -16,8 +16,6 @@ def create_quiz(user_email, plang, position, interviewer):
     Function to associate a user with a quiz
     
     '''
-
-    
     
     try:
         user = User.objects.get(email=user_email)
